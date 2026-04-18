@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: raw_data
+    description: "Raw application data ingested from the production SaaS database."
+    schema: raw
+    tables:
+      - name: raw_subscriptions
+        description: "Primary log of all historical and active customer subscription records."
+        columns:
+          - name: id
+            description: "Primary key of the raw subscription record."
+          - name: customer_id
+            description: "Unique identifier for the subscribing user."
+
+      - name: raw_usage_logs
+        description: "User-level event logs tracking login timestamps and session activity."

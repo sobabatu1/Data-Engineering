@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: fct_customer_health
+    description: >
+      Final customer health mart. Combines subscription MRR with 
+      behavioral login data to predict churn risk. 
+      Targeted by BI tools for executive reporting.
+    columns:
+      - name: customer_id
+        description: "The unique identifier for the customer. Primary Key."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: plan_type
+        description: "The subscription tier assigned to the customer (e.g., Basic, Pro, Enterprise)."
+
+      - name: mrr
+        description: "Monthly Recurring Revenue in USD."
+        data_tests:
+          - not_null
+
+      - name: health_score
+        description: "Categorical score based on login recency and subscription status."
+        data_tests:
+          - accepted_values:
+              values: ['Healthy', 'Churned', 'At Risk', 'Critical Risk']
+              
+      - name: days_inactive
+        description: "Days since last recorded login. Used as the primary driver for health scoring."
