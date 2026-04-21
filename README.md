@@ -1,8 +1,8 @@
 Fortress: SaaS Revenue & Customer Health Pipeline 
-Project Overview
+Project Overview:
 The Fortress Dashboard is an end-to-end analytics engineering project designed to transform raw, messy SaaS subscription logs into an executive-level command center. By architecting a Trailing 30-Day (T30) monitor, this pipeline moves beyond static reporting to provide proactive insights into churn risk and revenue protection.
 
-Data Architecture & Structure
+Data Architecture & Structure: 
 I implemented a modular Medallion Architecture using dbt to ensure data quality and maintainability.
 
 models/staging/: Atomic cleaning layer. Transforms raw sources (raw_subscriptions, raw_usage_logs) into clean, casted, and structured tables.
@@ -13,7 +13,7 @@ models/marts/: The Gold layer. Optimized for Tableau, featuring fct_customer_hea
 
 tests/: Data quality gateway. Contains schema tests (unique, not-null) and custom business logic tests (e.g., assert_healthy_users_have_recent_activity).
 
-Technical Engineering Features
+Technical Engineering Features:
 1. Trailing 30-Day (T30) Lookback
 Real-time SaaS health requires current data. I engineered a dynamic lookback window using dbt CTEs that anchors the pipeline to the latest 30 days of activity (April 2026). This filters out historical "zombie" data, focusing exclusively on current active revenue.
 
