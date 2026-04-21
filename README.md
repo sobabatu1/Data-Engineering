@@ -1,52 +1,39 @@
-Fortress Revenue and Financial Health Pipeline
-
-## The Mission
-Fortress is a fictional high-growth SaaS platform. As the business scaled to 10,000+ users, the leadership team needed a "Fortress-grade" data infrastructure to protect recurring revenue and identify churn risk in real-time.
-
 Fortress: SaaS Revenue & Customer Health Pipeline 
-This isn't just a dashboard; it’s a full-stack analytics engine. I built Fortress to solve the gap between raw subscription logs and executive-level strategy, turning "radioactive" data into a clean, Trailing 30-Day (T30) command center.
+Project Overview
+The Fortress Dashboard is an end-to-end analytics engineering project designed to transform raw, messy SaaS subscription logs into an executive-level command center. By architecting a Trailing 30-Day (T30) monitor, this pipeline moves beyond static reporting to provide proactive insights into churn risk and revenue protection.
 
-**The Stack**
-Transformation: dbt (Core logic & Medallion Architecture)
+Data Architecture & Structure
+I implemented a modular Medallion Architecture using dbt to ensure data quality and maintainability.
 
-Database: PostgreSQL
+models/staging/: Atomic cleaning layer. Transforms raw sources (raw_subscriptions, raw_usage_logs) into clean, casted, and structured tables.
 
-Visualization: Tableau Professional
+models/intermediate/: The logic engine. Aggregates behavioral data (e.g., int_user_activity) to calculate recency and frequency metrics.
 
-Environment: VS Code / Git
+models/marts/: The Gold layer. Optimized for Tableau, featuring fct_customer_health—the single source of truth for the "Fortress" command center.
 
-The Architecture
-I implemented a Medallion Architecture to move data from raw chaos to refined insights:
+tests/: Data quality gateway. Contains schema tests (unique, not-null) and custom business logic tests (e.g., assert_healthy_users_have_recent_activity).
 
-Staging (stg_): Atomic-level cleaning. Casting types, renaming columns, and handling initial deduplication.
-
-Intermediate (int_): The heavy lifting. This is where I joined subscription data with usage logs and calculated the "Days Since Last Login" logic.
-
-Marts (fct_): The reporting-ready layer. Optimized for Tableau with pre-calculated health scores to keep dashboard performance high.
-
-**Engineering Highlights**
-1. The T30 Lookback Engine
-Real-time SaaS requires current data. I engineered a dynamic lookback window using dbt CTEs that anchors the entire pipeline to the latest 30 days of activity (April 2026). This filters out historical "zombie" data and focuses purely on active revenue and immediate churn risk.
+Technical Engineering Features
+1. Trailing 30-Day (T30) Lookback
+Real-time SaaS health requires current data. I engineered a dynamic lookback window using dbt CTEs that anchors the pipeline to the latest 30 days of activity (April 2026). This filters out historical "zombie" data, focusing exclusively on current active revenue.
 
 2. Custom Health Score Logic
-I didn't just pull a column; I engineered a status engine based on financial and behavioral triggers:
+The pipeline calculates a multi-factor health score to categorize customers:
 
-Healthy: User active within < 14 days.
+Healthy: Logged in within the last 14 days.
 
-At Risk: 15–30 days of inactivity.
+At Risk: Inactive for 15–30 days.
 
-Critical Risk: 30+ days of inactivity.
+Critical Risk: Inactive for 30+ days or no login history.
 
-Churned: Explicitly cancelled status.
+Churned: Explicitly "cancelled" subscription status.
 
-3. Data Integrity (The Safety Net)
-I used dbt’s testing framework to ensure the "Fortress" remains unbreakable. Every run validates:
+3. Data Integrity & Testing
+I utilized dbt’s testing framework to ensure the "Fortress" remains unbreakable.
 
-Uniqueness on customer_id.
+Automated Tests: Validates that all health scores fall within accepted values and that MRR fields are never null.
 
-Non-null checks on MRR (crucial for financial reporting).
+Custom SQL Test: A bespoke test to ensure no user is marked "Healthy" without a verified login within the 14-day window.
 
-Accepted values for the Health Score categories.
-
-📊 The "Fortress" Command Center
-The final Tableau output is built for cognitive clarity. It surfaces $800k in Healthy MRR while immediately flagging $334k in Critical Risk revenue. By focusing on the 30-day window, the business can intervene before the revenue disappears.
+The Finite Summary
+Fortress bridges the gap between raw database records and C-suite decision-making. By treating data as a product, I've built a scalable machine that surfaces $800k in Healthy MRR while immediately flagging $334k in Critical Risk revenue.
